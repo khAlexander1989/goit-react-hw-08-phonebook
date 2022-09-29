@@ -8,12 +8,15 @@ export function Filter({ filterValue, onFilterChange }) {
   }
 
   return (
-    <FilterInput
-      type="text"
-      name="filter"
-      onChange={handleFilterChange}
-      value={filterValue}
-    ></FilterInput>
+    <label>
+      Filter
+      <FilterInput
+        type="text"
+        name="filter"
+        onChange={handleFilterChange}
+        value={filterValue}
+      />
+    </label>
   );
 }
 

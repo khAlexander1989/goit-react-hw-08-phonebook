@@ -3,6 +3,7 @@ import { Component } from 'react';
 
 import { Box } from 'components/Box';
 import { Filter } from 'components/Filter';
+import { ContactForm } from 'components/ContactForm';
 
 export class App extends Component {
   state = {
@@ -20,6 +21,8 @@ export class App extends Component {
   render() {
     return (
       <Box p={2}>
+        <ContactForm />
+
         <Filter
           onFilterChange={this.changeFilterValue}
           filterValue={this.state.filter}
