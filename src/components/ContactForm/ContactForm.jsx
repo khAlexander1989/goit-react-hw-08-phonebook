@@ -10,7 +10,6 @@ import {
   FormFieldLabel,
   FormSubmitBtn,
 } from './ContactForm.styled';
-import { Box } from 'components/Box';
 
 const INITIAL_STATE = {
   name: '',
