@@ -1,22 +1,26 @@
 import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
 
-import { FilterInput } from './Filter.styled';
+import { FilterField, FilterInput, FilterLabel } from './Filter.styled';
 
 export function Filter({ filterValue, onFilterChange }) {
+  const filterInputId = nanoid();
+
   function handleFilterChange({ currentTarget }) {
     onFilterChange(currentTarget.value);
   }
 
   return (
-    <label>
-      Filter
+    <FilterField>
+      <FilterLabel htmlFor={filterInputId}>Find contacts by name</FilterLabel>
       <FilterInput
+        id={filterInputId}
         type="text"
         name="filter"
         onChange={handleFilterChange}
         value={filterValue}
       />
-    </label>
+    </FilterField>
   );
 }
 

@@ -1,4 +1,16 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { HiUserAdd } from 'react-icons/hi';
+import { nanoid } from 'nanoid';
+
+import {
+  Form,
+  FormField,
+  FormInput,
+  FormFieldLabel,
+  FormSubmitBtn,
+} from './ContactForm.styled';
+import { Box } from 'components/Box';
 
 const INITIAL_STATE = {
   name: '',
@@ -8,14 +20,21 @@ const INITIAL_STATE = {
 export class ContactForm extends Component {
   state = { ...INITIAL_STATE };
 
+  static propTypes = {
+    onContactFormSubmit: PropTypes.func.isRequired,
+  };
+
   handleFormInputChange = ({ currentTarget: { name, value } }) => {
     this.setState({ [name]: value });
   };
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const { name, number } = event.currentTarget.elements;
+    const name = event.currentTarget.elements.name.value;
+    const number = event.currentTarget.elements.number.value;
     this.reset();
+
+    this.props.onContactFormSubmit({ name, number });
   };
 
   reset() {
@@ -24,11 +43,14 @@ export class ContactForm extends Component {
 
   render() {
     const { name, number } = this.state;
+    const nameFieldId = nanoid();
+    const numberFieldId = nanoid();
     return (
-      <form onSubmit={this.handleFormSubmit}>
-        <label>
-          Name
-          <input
+      <Form onSubmit={this.handleFormSubmit}>
+        <FormField>
+          <FormFieldLabel htmlFor={nameFieldId}>Name</FormFieldLabel>
+          <FormInput
+            id={nameFieldId}
             type="text"
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -36,11 +58,13 @@ export class ContactForm extends Component {
             required
             onChange={this.handleFormInputChange}
             value={name}
+            isActive={name ? true : false}
           />
-        </label>
-        <label>
-          Number
-          <input
+        </FormField>
+        <FormField>
+          <FormFieldLabel htmlFor={numberFieldId}>Number</FormFieldLabel>
+          <FormInput
+            id={numberFieldId}
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -48,10 +72,13 @@ export class ContactForm extends Component {
             required
             onChange={this.handleFormInputChange}
             value={number}
+            isActive={number ? true : false}
           />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
+        </FormField>
+        <FormSubmitBtn type="submit">
+          <HiUserAdd size="100%" />
+        </FormSubmitBtn>
+      </Form>
     );
   }
 }

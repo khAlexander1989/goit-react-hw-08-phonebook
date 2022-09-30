@@ -16,7 +16,7 @@ export const theme = {
 
   colors: {
     bgPrimary: '#FFFFFF',
-    bgSecondary: '#F3F6F9',
+    bgSecondary: '#f3f3f3',
     textPrimary: '#A9B3BD',
     textSecondary: '#122236',
     textWhite: '#FFFFFF',
@@ -24,8 +24,10 @@ export const theme = {
 
     red: '#E54D62',
     green: '#53AD54',
-    skyBlue: '#00BCD5',
+    lightBlue: '#3171e7',
 
+    borderPrimary: '#dfdfdf',
+    borderLightGrey: '#999999',
     borderWhite: '#FFFFFF',
     borderPaleBlue: '#EFEFEF',
   },
