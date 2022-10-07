@@ -13,17 +13,16 @@ export function ContactItem({ name, number, onContactItemDelete }) {
     <Contact>
       <ContactName>{name}:</ContactName>{' '}
       <ContactNumber>{number};</ContactNumber>
-      <ContactDeleteBtn type="button" onClick={onContactItemDelete}>
-        <FaTrash size="100%" />
+      <ContactDeleteBtn
+        type="button"
+        onClick={onContactItemDelete}
+        aria-label="contact delete button"
+      >
+        <FaTrash size="90%" />
       </ContactDeleteBtn>
     </Contact>
   );
 }
-
-ContactItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-};
 
 ContactItem.propTypes = {
   name: PropTypes.string.isRequired,

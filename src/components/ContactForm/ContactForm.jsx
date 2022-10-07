@@ -1,83 +1,58 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { HiUserAdd } from 'react-icons/hi';
-import { nanoid } from 'nanoid';
+import { Formik } from 'formik';
 
-import {
-  Form,
-  FormField,
-  FormInput,
-  FormFieldLabel,
-  FormSubmitBtn,
-} from './ContactForm.styled';
+import { contactValidationSchema } from 'validation/contact-validation';
 
-const INITIAL_STATE = {
+import { FormInput } from 'components/FormInput';
+import { StyledForm, FormSubmitBtn } from './ContactForm.styled';
+
+const INITIAL_VALUE = {
   name: '',
   number: '',
 };
 
-export class ContactForm extends Component {
-  state = { ...INITIAL_STATE };
-
-  static propTypes = {
-    onContactFormSubmit: PropTypes.func.isRequired,
-  };
-
-  handleFormInputChange = ({ currentTarget: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
-
-  handleFormSubmit = event => {
-    event.preventDefault();
-    const name = event.currentTarget.elements.name.value;
-    const number = event.currentTarget.elements.number.value;
-    this.reset();
-
-    this.props.onContactFormSubmit({ name, number });
-  };
-
-  reset() {
-    this.setState({ ...INITIAL_STATE });
+export function ContactForm({ onContactFormSubmit }) {
+  function handleFormSubmit(values, { setSubmitting, resetForm }) {
+    setSubmitting(true);
+    onContactFormSubmit(values);
+    resetForm();
+    setSubmitting(false);
   }
 
-  render() {
-    const { name, number } = this.state;
-    const nameFieldId = nanoid();
-    const numberFieldId = nanoid();
-    return (
-      <Form onSubmit={this.handleFormSubmit}>
-        <FormField>
-          <FormFieldLabel htmlFor={nameFieldId}>Name</FormFieldLabel>
+  return (
+    <Formik
+      initialValues={INITIAL_VALUE}
+      onSubmit={handleFormSubmit}
+      validationSchema={contactValidationSchema}
+    >
+      {({ isSubmitting, errors, touched }) => (
+        <StyledForm>
           <FormInput
-            id={nameFieldId}
-            type="text"
             name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            onChange={this.handleFormInputChange}
-            value={name}
-            isActive={name ? true : false}
+            type="text"
+            label="Name"
+            isFieldValid={!(touched.name && errors.name)}
           />
-        </FormField>
-        <FormField>
-          <FormFieldLabel htmlFor={numberFieldId}>Number</FormFieldLabel>
           <FormInput
-            id={numberFieldId}
-            type="tel"
             name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            onChange={this.handleFormInputChange}
-            value={number}
-            isActive={number ? true : false}
+            type="tel"
+            label="Number"
+            isFieldValid={!(touched.number && errors.number)}
           />
-        </FormField>
-        <FormSubmitBtn type="submit">
-          <HiUserAdd size="100%" />
-        </FormSubmitBtn>
-      </Form>
-    );
-  }
+          <FormSubmitBtn
+            type="submit"
+            disabled={isSubmitting}
+            aria-label="form submit button"
+          >
+            <HiUserAdd size="100%" />
+          </FormSubmitBtn>
+        </StyledForm>
+      )}
+    </Formik>
+  );
 }
+
+ContactForm.propTypes = {
+  onContactFormSubmit: PropTypes.func.isRequired,
+};

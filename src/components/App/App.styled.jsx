@@ -11,7 +11,7 @@ export const ContactsTitle = styled.h2`
 
   border-top: ${p => p.theme.borders.default};
   border-color: ${p => p.theme.colors.borderLightGrey};
-  margin-top: ${p => p.theme.space[2]};
+  margin-top: ${p => p.theme.space[4]};
   padding-top: ${p => p.theme.space[2]};
 
   text-align: center;

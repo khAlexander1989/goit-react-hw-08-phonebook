@@ -16,20 +16,23 @@ export const theme = {
 
   colors: {
     bgPrimary: '#FFFFFF',
-    bgSecondary: '#f3f3f3',
+    bgSecondary: '#F3F3F3',
     textPrimary: '#A9B3BD',
     textSecondary: '#122236',
     textWhite: '#FFFFFF',
     textBlack: '#000000',
 
+    error: '#FF0000',
     red: '#E54D62',
     green: '#53AD54',
-    lightBlue: '#3171e7',
+    lightBlue: '#3171E7',
 
-    borderPrimary: '#dfdfdf',
+    borderPrimary: '#DFDFDF',
     borderLightGrey: '#999999',
     borderWhite: '#FFFFFF',
     borderPaleBlue: '#EFEFEF',
+
+    btnDisabled: '#B2CDFF',
   },
 
   radii: {
