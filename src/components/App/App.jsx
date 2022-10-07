@@ -6,6 +6,8 @@ import { Filter } from 'components/Filter';
 import { ContactForm } from 'components/ContactForm';
 import { ContactList } from 'components/ContactList';
 import { ContactsTitle, AppTitle } from './App.styled';
+import * as LSApi from 'utils/localeStorageApi';
+import { LS_DATA_KEY } from 'utils/constants';
 
 export class App extends Component {
   state = {
@@ -17,6 +19,21 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const serializedContacts = LSApi.getDataFromLocalStorage(LS_DATA_KEY);
+    if (serializedContacts) {
+      const deserializedContacts = LSApi.deserializeData(serializedContacts);
+      this.setState({ contacts: deserializedContacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      const serializedContacts = LSApi.serializeData(this.state.contacts);
+      LSApi.addDataToLocalStorage(LS_DATA_KEY, serializedContacts);
+    }
+  }
 
   changeFilterValue = value => this.setState({ filter: value });
 
