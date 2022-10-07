@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { FormInput } from 'components/ContactForm/ContactForm.styled';
 
 export const FilterField = styled.div`
   display: flex;
