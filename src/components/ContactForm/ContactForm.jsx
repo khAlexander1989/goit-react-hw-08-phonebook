@@ -1,19 +1,24 @@
 import { useRef } from 'react';
-import PropTypes from 'prop-types';
 import { HiUserAdd } from 'react-icons/hi';
 import { Formik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { contactValidationSchema } from 'validation/contact-validation';
 
 import { FormInput } from 'components/FormInput';
 import { StyledForm, FormSubmitBtn } from './ContactForm.styled';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
 
 const INITIAL_VALUE = {
   name: '',
   number: '',
 };
 
-export function ContactForm({ onContactFormSubmit }) {
+export function ContactForm() {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const nameInputRef = useRef();
   const numberInputRef = useRef();
 
@@ -22,9 +27,24 @@ export function ContactForm({ onContactFormSubmit }) {
     numberInputRef.current.blur();
   }
 
+  function isExistContact(contactName, contacts) {
+    return contacts.some(
+      ({ name }) => name.toUpperCase() === contactName.toUpperCase()
+    );
+  }
+
+  function addNewContact({ name, number }) {
+    if (isExistContact(name, contacts)) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
+    dispatch(addContact(name, number));
+  }
+
   function handleFormSubmit(values, { setSubmitting, resetForm }) {
     setSubmitting(true);
-    onContactFormSubmit(values);
+    addNewContact(values);
     resetForm();
     blurFormInputs();
     setSubmitting(false);
@@ -77,7 +97,3 @@ export function ContactForm({ onContactFormSubmit }) {
     </Formik>
   );
 }
-
-ContactForm.propTypes = {
-  onContactFormSubmit: PropTypes.func.isRequired,
-};

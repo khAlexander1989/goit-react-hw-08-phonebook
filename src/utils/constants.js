@@ -13,5 +13,3 @@ export const fieldPatterns = {
   number:
     /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
 };
-
-export const LS_DATA_KEY = 'contacts';
