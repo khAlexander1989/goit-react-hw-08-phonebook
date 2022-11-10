@@ -13,3 +13,5 @@ export const fieldPatterns = {
   number:
     /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
 };
+
+export const MOCK_API_URL = 'https://636bf4cead62451f9fc0400e.mockapi.io/';

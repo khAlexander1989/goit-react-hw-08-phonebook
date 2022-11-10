@@ -1,37 +1,45 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
+import { fetchContacts, addContact, deleteContact } from './operations';
+import { isAnyOf } from '@reduxjs/toolkit';
 
-const initialState = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  { id: 'id-5', name: 'Marshall Mathers', number: '228-13-11' },
-];
+const thunks = [fetchContacts, addContact, deleteContact];
+
+const getThunkActions = actionType => thunks.map(thunk => thunk[actionType]);
+
+const initialState = {
+  items: [],
+  status: 'idle',
+  error: null,
+};
 
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
-  reducers: {
-    addContact: {
-      prepare(name, number) {
+
+  extraReducers: builder => {
+    builder
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        return { ...state, items: [...action.payload] };
+      })
+      .addCase(addContact.fulfilled, (state, action) => {
+        return { ...state, items: [...state.items, action.payload] };
+      })
+      .addCase(deleteContact.fulfilled, (state, action) => {
         return {
-          payload: {
-            id: nanoid(),
-            name,
-            number,
-          },
+          ...state,
+          items: state.items.filter(contact => contact.id !== action.payload),
         };
-      },
-      reducer(state, { payload }) {
-        return [...state, payload];
-      },
-    },
-    deleteContact(state, { payload }) {
-      return [...state].filter(contact => contact.id !== payload);
-    },
+      })
+      .addMatcher(isAnyOf(...getThunkActions('fulfilled')), state => {
+        return { ...state, status: 'resolved', error: null };
+      })
+      .addMatcher(isAnyOf(...getThunkActions('pending')), state => {
+        return { ...state, status: 'pending' };
+      })
+      .addMatcher(isAnyOf(...getThunkActions('rejected')), (state, action) => {
+        return { ...state, status: 'rejected', error: action.payload };
+      });
   },
 });
 
-export const { addContact, deleteContact } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;

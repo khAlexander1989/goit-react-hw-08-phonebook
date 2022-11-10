@@ -8,7 +8,7 @@ import { contactValidationSchema } from 'validation/contact-validation';
 import { FormInput } from 'components/FormInput';
 import { StyledForm, FormSubmitBtn } from './ContactForm.styled';
 import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/contactsSlice';
+import { addContact } from 'redux/operations';
 
 const INITIAL_VALUE = {
   name: '',
@@ -39,7 +39,7 @@ export function ContactForm() {
       return;
     }
 
-    dispatch(addContact(name, number));
+    dispatch(addContact({ name, number }));
   }
 
   function handleFormSubmit(values, { setSubmitting, resetForm }) {
