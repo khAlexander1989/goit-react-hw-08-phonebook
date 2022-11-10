@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { FilterField, FilterInput, FilterLabel } from './Filter.styled';
 import { setNameFilter } from 'redux/filtersSlice';
-import { getFilters } from 'redux/selectors';
+import { selectFilters } from 'redux/selectors';
 
 export function Filter() {
   const filterInputId = nanoid();
 
   const dispatch = useDispatch();
-  const nameFilter = useSelector(getFilters).name;
+  const nameFilter = useSelector(selectFilters).name;
 
   return (
     <FilterField>

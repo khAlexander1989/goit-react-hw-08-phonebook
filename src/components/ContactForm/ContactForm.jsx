@@ -7,7 +7,7 @@ import { contactValidationSchema } from 'validation/contact-validation';
 
 import { FormInput } from 'components/FormInput';
 import { StyledForm, FormSubmitBtn } from './ContactForm.styled';
-import { getContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
 import { addContact } from 'redux/contactsSlice';
 
 const INITIAL_VALUE = {
@@ -17,7 +17,7 @@ const INITIAL_VALUE = {
 
 export function ContactForm() {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const nameInputRef = useRef();
   const numberInputRef = useRef();
