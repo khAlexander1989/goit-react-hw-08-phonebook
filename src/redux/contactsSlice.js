@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact } from './operations';
 import { isAnyOf } from '@reduxjs/toolkit';
+import { STATUS } from 'utils/constants';
 
 const thunks = [fetchContacts, addContact, deleteContact];
 
@@ -19,25 +20,31 @@ const contactsSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(fetchContacts.fulfilled, (state, action) => {
-        return { ...state, items: [...action.payload] };
+        state.items = action.payload;
       })
+
       .addCase(addContact.fulfilled, (state, action) => {
-        return { ...state, items: [...state.items, action.payload] };
+        state.items.push(action.payload);
       })
+
       .addCase(deleteContact.fulfilled, (state, action) => {
-        return {
-          ...state,
-          items: state.items.filter(contact => contact.id !== action.payload),
-        };
+        state.items = [...state.items].filter(
+          contact => contact.id !== action.payload
+        );
       })
+
       .addMatcher(isAnyOf(...getThunkActions('fulfilled')), state => {
-        return { ...state, status: 'resolved', error: null };
+        state.status = STATUS.RESOLVED;
+        state.error = null;
       })
+
       .addMatcher(isAnyOf(...getThunkActions('pending')), state => {
-        return { ...state, status: 'pending' };
+        state.status = STATUS.PENDING;
       })
+
       .addMatcher(isAnyOf(...getThunkActions('rejected')), (state, action) => {
-        return { ...state, status: 'rejected', error: action.payload };
+        state.status = STATUS.REJECTED;
+        state.error = action.payload;
       });
   },
 });

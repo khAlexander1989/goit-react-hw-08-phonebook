@@ -28,5 +28,8 @@ export const ContactDeleteBtn = styled(IconBtn)`
   :focus {
     background-color: ${p => p.theme.colors.red};
     color: ${p => p.theme.colors.bgPrimary};
+
+    background-color: ${p => (p.disabled ? 'transparent' : p.theme.colors.red)};
+    color: ${p => (p.disabled ? p.theme.colors.red : p.theme.colors.bgPrimary)};
   }
 `;

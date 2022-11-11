@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ERR_MSGS } from 'utils/constants';
 import fetchAPI from '../utils/fetchContactsAPI';
 
 export const fetchContacts = createAsyncThunk(
@@ -7,8 +8,8 @@ export const fetchContacts = createAsyncThunk(
     try {
       const contacts = await fetchAPI.fetchContacts();
       return contacts;
-    } catch (err) {
-      return thunckAPI.rejectWithValue(err.message);
+    } catch {
+      return thunckAPI.rejectWithValue(ERR_MSGS.CONTACTS_FETCHING);
     }
   }
 );
@@ -19,8 +20,8 @@ export const addContact = createAsyncThunk(
     try {
       const contact = await fetchAPI.addContact(name, number);
       return contact;
-    } catch (err) {
-      return thunckAPI.rejectWithValue(err.message);
+    } catch {
+      return thunckAPI.rejectWithValue(ERR_MSGS.CONTACT_CREATION);
     }
   }
 );
@@ -31,8 +32,8 @@ export const deleteContact = createAsyncThunk(
     try {
       const deletedContact = await fetchAPI.deleteContact(id);
       return deletedContact.id;
-    } catch (err) {
-      return thunckAPI.rejectWithValue(err.message);
+    } catch {
+      return thunckAPI.rejectWithValue(ERR_MSGS.CONTACT_DELETION);
     }
   }
 );

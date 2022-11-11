@@ -33,21 +33,19 @@ export function ContactForm() {
     );
   }
 
-  function addNewContact({ name, number }) {
-    if (isExistContact(name, contacts)) {
-      alert(`${name} is already in contacts`);
+  function handleFormSubmit(values, { setSubmitting, resetForm }) {
+    setSubmitting(true);
+    if (isExistContact(values.name, contacts)) {
+      alert(`${values.name} is already in contacts`);
+      setSubmitting(false);
       return;
     }
 
-    dispatch(addContact({ name, number }));
-  }
-
-  function handleFormSubmit(values, { setSubmitting, resetForm }) {
-    setSubmitting(true);
-    addNewContact(values);
-    resetForm();
-    blurFormInputs();
-    setSubmitting(false);
+    dispatch(addContact(values)).finally(() => {
+      resetForm();
+      blurFormInputs();
+      setSubmitting(false);
+    });
   }
 
   return (
