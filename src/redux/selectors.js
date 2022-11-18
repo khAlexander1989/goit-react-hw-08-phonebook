@@ -4,9 +4,15 @@ export const selectContacts = ({ contacts }) => contacts.items;
 
 export const selectFilters = ({ filters }) => filters;
 
-export const selectStatus = ({ contacts }) => contacts.status;
-
 export const selectError = ({ contacts }) => contacts.error;
+
+export const selectFetchingStatus = ({ contacts }) => contacts.fetchingStatus;
+
+export const selectAditionStatus = ({ contacts }) => contacts.aditionStatus;
+
+export const selectDeletionStatus = ({ contacts }) => contacts.deletionStatus;
+
+export const selectItemToDeleteId = ({ contacts }) => contacts.itemToDeleteId;
 
 export const selectFilteredContacts = createSelector(
   [selectContacts, selectFilters],

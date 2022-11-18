@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { ClockLoader } from 'react-spinners';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { deleteContact } from 'redux/operations';
+import { selectDeletionStatus, selectItemToDeleteId } from 'redux/selectors';
+import { STATUS } from 'utils/constants';
 
 import {
   Contact,
@@ -14,12 +16,11 @@ import {
 
 export function ContactItem({ contact: { id, name, number } }) {
   const dispatch = useDispatch();
-  const [isDeleting, setIsDeleting] = useState(false);
+  const status = useSelector(selectDeletionStatus);
+  const itemToDeleteId = useSelector(selectItemToDeleteId);
 
-  function handleDelete() {
-    setIsDeleting(true);
-    dispatch(deleteContact(id)).finally(() => setIsDeleting(false));
-  }
+  const isCurrentItemDeleting =
+    status === STATUS.PENDING && id === itemToDeleteId;
 
   return (
     <Contact>
@@ -27,11 +28,15 @@ export function ContactItem({ contact: { id, name, number } }) {
       <ContactNumber>{number};</ContactNumber>
       <ContactDeleteBtn
         type="button"
-        onClick={handleDelete}
-        disabled={isDeleting}
+        onClick={() => dispatch(deleteContact(id))}
+        disabled={isCurrentItemDeleting}
         aria-label="contact delete button"
       >
-        <FaTrash size="90%" />
+        {isCurrentItemDeleting ? (
+          <ClockLoader size="16px" color="#E54D62" />
+        ) : (
+          <FaTrash size="90%" />
+        )}
       </ContactDeleteBtn>
     </Contact>
   );

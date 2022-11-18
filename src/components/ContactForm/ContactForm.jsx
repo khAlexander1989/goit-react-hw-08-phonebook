@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { HiUserAdd } from 'react-icons/hi';
+import { ClockLoader } from 'react-spinners';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,8 +8,11 @@ import { contactValidationSchema } from 'validation/contact-validation';
 
 import { FormInput } from 'components/FormInput';
 import { StyledForm, FormSubmitBtn } from './ContactForm.styled';
+
 import { selectContacts } from 'redux/selectors';
 import { addContact } from 'redux/operations';
+import { selectAditionStatus } from 'redux/selectors';
+import { STATUS } from 'utils/constants';
 
 const INITIAL_VALUE = {
   name: '',
@@ -18,6 +22,7 @@ const INITIAL_VALUE = {
 export function ContactForm() {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
+  const status = useSelector(selectAditionStatus);
 
   const nameInputRef = useRef();
   const numberInputRef = useRef();
@@ -33,18 +38,15 @@ export function ContactForm() {
     );
   }
 
-  function handleFormSubmit(values, { setSubmitting, resetForm }) {
-    setSubmitting(true);
+  function handleFormSubmit(values, { resetForm }) {
     if (isExistContact(values.name, contacts)) {
       alert(`${values.name} is already in contacts`);
-      setSubmitting(false);
       return;
     }
 
     dispatch(addContact(values)).finally(() => {
       resetForm();
       blurFormInputs();
-      setSubmitting(false);
     });
   }
 
@@ -54,14 +56,7 @@ export function ContactForm() {
       onSubmit={handleFormSubmit}
       validationSchema={contactValidationSchema}
     >
-      {({
-        isSubmitting,
-        errors,
-        touched,
-        values,
-        handleChange,
-        handleBlur,
-      }) => (
+      {({ errors, touched, values, handleChange, handleBlur }) => (
         <StyledForm>
           <FormInput
             name="name"
@@ -85,10 +80,14 @@ export function ContactForm() {
           />
           <FormSubmitBtn
             type="submit"
-            disabled={isSubmitting}
+            disabled={status === STATUS.PENDING}
             aria-label="form submit button"
           >
-            <HiUserAdd size="100%" />
+            {status === STATUS.PENDING ? (
+              <ClockLoader size="16px" color="#3171E7" />
+            ) : (
+              <HiUserAdd size="100%" />
+            )}
           </FormSubmitBtn>
         </StyledForm>
       )}

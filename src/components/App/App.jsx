@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectError, selectStatus } from 'redux/selectors';
+import { selectError, selectFetchingStatus } from 'redux/selectors';
 import { Filter } from 'components/Filter';
 import { ContactForm } from 'components/ContactForm';
 import { ContactList } from 'components/ContactList';
@@ -13,7 +13,7 @@ import { STATUS } from 'utils/constants';
 
 export function App() {
   const dispatch = useDispatch();
-  const status = useSelector(selectStatus);
+  const status = useSelector(selectFetchingStatus);
   const error = useSelector(selectError);
 
   useEffect(() => {
