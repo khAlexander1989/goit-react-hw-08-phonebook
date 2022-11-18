@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact } from './operations';
-import { isAnyOf } from '@reduxjs/toolkit';
+// import { isAnyOf } from '@reduxjs/toolkit';
 import { STATUS } from 'utils/constants';
 
-const thunks = [fetchContacts, addContact, deleteContact];
+// const thunks = [fetchContacts, addContact, deleteContact];
 
-const getThunkActions = actionType => thunks.map(thunk => thunk[actionType]);
+// const getThunkActions = actionType => thunks.map(thunk => thunk[actionType]);
 
 const initialState = {
   items: [],
