@@ -1,6 +1,6 @@
 import { BarLoader } from 'react-spinners';
 
-export function ContentLoader() {
+export default function ContentLoader() {
   const override = {
     position: 'absolute',
     left: '50%',

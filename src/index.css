@@ -11,6 +11,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* background-color: #CFF5E7; */
 }
 
 code {
@@ -43,4 +44,12 @@ ul {
 img {
   max-width: 100%;
   display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+.notiflix-notify {
+  border: 1px solid #dfdfdf;
 }

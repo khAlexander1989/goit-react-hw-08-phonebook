@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Input = styled.input`
   box-sizing: border-box;
-  height: 25px;
+  height: 35px;
   padding: ${p => p.theme.space[1]} ${p => p.theme.space[2]};
 
   border: ${p => p.theme.borders.default};
@@ -16,7 +16,7 @@ export const Input = styled.input`
   :focus {
     outline: none;
     border-color: ${p =>
-      p.isFieldValid ? p.theme.colors.lightBlue : p.theme.colors.error};
+      p.isFieldValid ? p.theme.colors.accent : p.theme.colors.error};
   }
 `;
 
@@ -29,6 +29,6 @@ export const ErrorMsg = styled.div`
   bottom: 0;
   left: 0;
   transform: translateY(100%);
-  font-size: ${p => p.theme.fontSizes[0]};
+  font-size: 10px;
   color: ${p => p.theme.colors.error};
 `;

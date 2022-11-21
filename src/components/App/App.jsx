@@ -1,46 +1,53 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { lazy, useEffect } from 'react';
+import Notiflix from 'notiflix';
 
-import { selectError, selectFetchingStatus } from 'redux/selectors';
-import { Filter } from 'components/Filter';
-import { ContactForm } from 'components/ContactForm';
-import { ContactList } from 'components/ContactList';
-import { ContactsTitle, AppTitle, ErrMsg } from './App.styled';
-import { fetchContacts } from 'redux/operations';
-import { Box } from 'components/Box';
-import { ContentLoader } from 'components/ContentLoader';
-import { STATUS } from 'utils/constants';
+import SharedLayout from 'components/SharedLayout';
+// import Contacts from 'pages/Contacts';
+// import Login from 'pages/Login';
+// import Register from 'pages/Register';
+import PrivateRoute from 'components/PrivateRoute';
+import RestrictedRoute from 'components/RestrictedRoute';
+import { refreshUser } from 'redux/auth/operations';
 
-export function App() {
+import { notifyOptions } from 'utils/constants';
+import { useAuth } from 'hooks/useAuth';
+import { STATUS } from '../../utils/constants';
+
+Notiflix.Notify.init(notifyOptions);
+
+const Contacts = lazy(() => import('pages/Contacts'));
+const Login = lazy(() => import('pages/Login'));
+const Register = lazy(() => import('pages/Register'));
+
+export default function App() {
   const dispatch = useDispatch();
-  const status = useSelector(selectFetchingStatus);
-  const error = useSelector(selectError);
+  const { refreshingStatus } = useAuth();
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(refreshUser());
   }, [dispatch]);
 
-  return (
-    <Box
-      p={2}
-      width="450px"
-      border="default"
-      borderRadius="normal"
-      borderColor="borderLightGrey"
-    >
-      <AppTitle>Phonebook</AppTitle>
-      <ContactForm />
-
-      <ContactsTitle>Contacts</ContactsTitle>
-      <Filter />
-      <Box p={2} position="relative">
-        {status === STATUS.PENDING ? (
-          <ContentLoader />
-        ) : (
-          error && <ErrMsg>{error}</ErrMsg>
-        )}
-      </Box>
-      <ContactList />
-    </Box>
+  return refreshingStatus === STATUS.PENDING ? (
+    <div>Refreshing user...</div>
+  ) : (
+    <Routes>
+      <Route path="/" element={<SharedLayout />}>
+        <Route
+          path="/login"
+          element={<RestrictedRoute element={<Login />} redirectTo="/" />}
+        />
+        <Route
+          path="/register"
+          element={<RestrictedRoute element={<Register />} redirectTo="/" />}
+        />
+        <Route
+          index
+          element={<PrivateRoute element={<Contacts />} redirectTo="/login" />}
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Route>
+    </Routes>
   );
 }

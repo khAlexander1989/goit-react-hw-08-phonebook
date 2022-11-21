@@ -16,16 +16,19 @@ export const theme = {
 
   colors: {
     bgPrimary: '#FFFFFF',
-    bgSecondary: '#F3F3F3',
-    textPrimary: '#A9B3BD',
+    bgSecondary: '#F6F8FF',
+    accent: '#4184FF',
+    textPrimary: '#384141',
     textSecondary: '#122236',
     textWhite: '#FFFFFF',
     textBlack: '#000000',
-
     error: '#FF0000',
+
     red: '#E54D62',
     green: '#53AD54',
-    lightBlue: '#3171E7',
+    blue: '#3274F0',
+    orange: '#f32d0f',
+    seaGreen: '#3f7976',
 
     borderPrimary: '#DFDFDF',
     borderLightGrey: '#999999',

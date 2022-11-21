@@ -2,10 +2,10 @@ import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { FilterField, FilterInput, FilterLabel } from './Filter.styled';
-import { setNameFilter } from 'redux/filtersSlice';
-import { selectFilters } from 'redux/selectors';
+import { setNameFilter } from 'redux/filters/slice';
+import { selectFilters } from 'redux/filters/selectors';
 
-export function Filter() {
+export default function Filter() {
   const filterInputId = nanoid();
 
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export function Filter() {
 
   return (
     <FilterField>
-      <FilterLabel htmlFor={filterInputId}>Find contacts by name</FilterLabel>
+      <FilterLabel htmlFor={filterInputId}>Find contact by name</FilterLabel>
       <FilterInput
         id={filterInputId}
         type="text"

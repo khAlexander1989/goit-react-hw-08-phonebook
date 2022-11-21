@@ -1,17 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchContacts, addContact, deleteContact } from './operations';
-// import { isAnyOf } from '@reduxjs/toolkit';
+import {
+  fetchContacts,
+  addContact,
+  updateContact,
+  deleteContact,
+} from './operations';
 import { STATUS } from 'utils/constants';
-
-// const thunks = [fetchContacts, addContact, deleteContact];
-
-// const getThunkActions = actionType => thunks.map(thunk => thunk[actionType]);
 
 const initialState = {
   items: [],
-  fetchingStatus: 'idle',
-  deletionStatus: 'idle',
-  aditionStatus: 'idle',
+  fetchingStatus: STATUS.IDLE,
+  aditionStatus: STATUS.IDLE,
+  updatingStatus: STATUS.IDLE,
+  deletionStatus: STATUS.IDLE,
   itemToDeleteId: null,
   error: null,
 };
@@ -49,6 +50,22 @@ const contactsSlice = createSlice({
         state.error = action.payload;
       })
 
+      .addCase(updateContact.pending, state => {
+        state.updatingStatus = STATUS.PENDING;
+      })
+      .addCase(updateContact.fulfilled, (state, action) => {
+        state.updatingStatus = STATUS.RESOLVED;
+        state.error = null;
+        const idx = state.items.findIndex(
+          contact => contact.id === action.payload.id
+        );
+        state.items.splice(idx, 1, action.payload);
+      })
+      .addCase(updateContact.rejected, (state, action) => {
+        state.updatingStatus = STATUS.REJECTED;
+        state.error = action.payload;
+      })
+
       .addCase(deleteContact.pending, (state, action) => {
         state.deletionStatus = STATUS.PENDING;
         state.itemToDeleteId = action.meta.arg;
@@ -58,7 +75,7 @@ const contactsSlice = createSlice({
         state.error = null;
         state.itemToDeleteId = null;
         state.items = [...state.items].filter(
-          contact => contact.id !== action.payload
+          contact => contact.id !== action.payload.id
         );
       })
       .addCase(deleteContact.rejected, (state, action) => {
@@ -66,37 +83,6 @@ const contactsSlice = createSlice({
         state.itemToDeleteId = null;
         state.error = action.payload;
       }),
-
-  // extraReducers: builder => {
-  //   builder
-  //     .addCase(fetchContacts.fulfilled, (state, action) => {
-  //       state.items = action.payload;
-  //     })
-
-  //     .addCase(addContact.fulfilled, (state, action) => {
-  //       state.items.push(action.payload);
-  //     })
-
-  //     .addCase(deleteContact.fulfilled, (state, action) => {
-  //       state.items = [...state.items].filter(
-  //         contact => contact.id !== action.payload
-  //       );
-  //     })
-
-  //     .addMatcher(isAnyOf(...getThunkActions('fulfilled')), state => {
-  //       state.status = STATUS.RESOLVED;
-  //       state.error = null;
-  //     })
-
-  //     .addMatcher(isAnyOf(...getThunkActions('pending')), state => {
-  //       state.status = STATUS.PENDING;
-  //     })
-
-  //     .addMatcher(isAnyOf(...getThunkActions('rejected')), (state, action) => {
-  //       state.status = STATUS.REJECTED;
-  //       state.error = action.payload;
-  //     });
-  // },
 });
 
 export const contactsReducer = contactsSlice.reducer;

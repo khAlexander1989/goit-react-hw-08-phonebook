@@ -1,36 +1,25 @@
-import { useRef } from 'react';
-import { HiUserAdd } from 'react-icons/hi';
 import { ClockLoader } from 'react-spinners';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import { Notify } from 'notiflix';
+import PropTypes from 'prop-types';
 
 import { contactValidationSchema } from 'validation/contact-validation';
 
 import { FormInput } from 'components/FormInput';
-import { StyledForm, FormSubmitBtn } from './ContactForm.styled';
+import { StyledForm } from 'components/EditContactForm/EditContactForm.styled';
+import { AddContactBtn } from './ContactForm.styled';
+import { Box } from 'components/Box';
 
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/operations';
-import { selectAditionStatus } from 'redux/selectors';
+import { selectContacts } from 'redux/contacts/selectors';
+import { addContact } from 'redux/contacts/operations';
+import { selectAditionStatus } from 'redux/contacts/selectors';
 import { STATUS } from 'utils/constants';
 
-const INITIAL_VALUE = {
-  name: '',
-  number: '',
-};
-
-export function ContactForm() {
+export default function ContactForm({ onSubmit }) {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
-  const status = useSelector(selectAditionStatus);
-
-  const nameInputRef = useRef();
-  const numberInputRef = useRef();
-
-  function blurFormInputs() {
-    nameInputRef.current.blur();
-    numberInputRef.current.blur();
-  }
+  const adidtionStatus = useSelector(selectAditionStatus);
 
   function isExistContact(contactName, contacts) {
     return contacts.some(
@@ -38,59 +27,74 @@ export function ContactForm() {
     );
   }
 
-  function handleFormSubmit(values, { resetForm }) {
+  function handleFormSubmit(values) {
     if (isExistContact(values.name, contacts)) {
-      alert(`${values.name} is already in contacts`);
+      Notify.warning(`${values.name} is already in contacts`);
       return;
     }
 
-    dispatch(addContact(values)).finally(() => {
-      resetForm();
-      blurFormInputs();
-    });
+    dispatch(addContact(values))
+      .unwrap()
+      .then(() => Notify.success('Contact has added.'))
+      .catch(Notify.failure)
+      .finally(() => {
+        onSubmit();
+      });
   }
 
   return (
     <Formik
-      initialValues={INITIAL_VALUE}
+      initialValues={{ name: '', number: '' }}
       onSubmit={handleFormSubmit}
       validationSchema={contactValidationSchema}
     >
-      {({ errors, touched, values, handleChange, handleBlur }) => (
+      {({ errors, touched, values, isValid, handleChange, handleBlur }) => (
         <StyledForm>
-          <FormInput
-            name="name"
-            type="text"
-            label="Name"
-            ref={nameInputRef}
-            isFieldValid={!(touched.name && errors.name)}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.name}
-          />
-          <FormInput
-            name="number"
-            type="tel"
-            label="Number"
-            ref={numberInputRef}
-            isFieldValid={!(touched.number && errors.number)}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.number}
-          />
-          <FormSubmitBtn
+          <Box as="ul">
+            <Box as="li">
+              <FormInput
+                name="name"
+                type="text"
+                label="Name"
+                isFieldValid={!(touched.name && errors.name)}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
+              />
+            </Box>
+            <Box as="li" mt="24px">
+              <FormInput
+                name="number"
+                type="tel"
+                label="Number"
+                isFieldValid={!(touched.number && errors.number)}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.number}
+              />
+            </Box>
+          </Box>
+          <AddContactBtn
             type="submit"
-            disabled={status === STATUS.PENDING}
+            disabled={
+              adidtionStatus === STATUS.PENDING ||
+              !isValid ||
+              !values.name ||
+              !values.number
+            }
             aria-label="form submit button"
           >
-            {status === STATUS.PENDING ? (
-              <ClockLoader size="16px" color="#3171E7" />
-            ) : (
-              <HiUserAdd size="100%" />
+            Add contact
+            {adidtionStatus === STATUS.PENDING && (
+              <ClockLoader size="16px" color="white" />
             )}
-          </FormSubmitBtn>
+          </AddContactBtn>
         </StyledForm>
       )}
     </Formik>
   );
 }
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
