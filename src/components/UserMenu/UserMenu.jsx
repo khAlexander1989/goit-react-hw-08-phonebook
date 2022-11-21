@@ -5,11 +5,11 @@ import { ClockLoader } from 'react-spinners';
 import { useAuth } from 'hooks/useAuth';
 import { STATUS } from 'utils/constants';
 import { logout } from 'redux/auth/operations';
-import { Container, UserName, Text, LogoutBtn } from './UserMenu.styled';
+import { Container, Email, LogoutBtn } from './UserMenu.styled';
 
 export default function UserMenu() {
   const {
-    user: { name },
+    user: { email },
     loggingOutStatus,
   } = useAuth();
 
@@ -21,8 +21,7 @@ export default function UserMenu() {
 
   return (
     <Container>
-      <Text>Welcome, </Text>
-      <UserName>{name}</UserName>
+      <Email>{email}</Email>
       <LogoutBtn type="button" onClick={handleLogout}>
         Logout
         {loggingOutStatus === STATUS.PENDING ? (

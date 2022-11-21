@@ -7,15 +7,9 @@ export const Container = styled.div`
   column-gap: ${p => p.theme.space[1]};
 `;
 
-export const UserName = styled.span`
+export const Email = styled.span`
   font-size: 18px;
   font-weight: ${p => p.theme.fontWeights.bold};
-  color: ${p => p.theme.colors.textPrimary};
-`;
-
-export const Text = styled.span`
-  font-weight: ${p => p.theme.fontWeights.bold};
-  font-size: 18px;
   color: ${p => p.theme.colors.textPrimary};
 `;
 

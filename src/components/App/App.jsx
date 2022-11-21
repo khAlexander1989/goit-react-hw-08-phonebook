@@ -4,9 +4,6 @@ import { lazy, useEffect } from 'react';
 import Notiflix from 'notiflix';
 
 import SharedLayout from 'components/SharedLayout';
-// import Contacts from 'pages/Contacts';
-// import Login from 'pages/Login';
-// import Register from 'pages/Register';
 import PrivateRoute from 'components/PrivateRoute';
 import RestrictedRoute from 'components/RestrictedRoute';
 import { refreshUser } from 'redux/auth/operations';
