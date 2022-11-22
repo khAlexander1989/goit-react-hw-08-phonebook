@@ -12,31 +12,16 @@ const modalRoot = document.querySelector('#modal-root');
 export default function Modal({ title, closeModal, children }) {
   const [blockScroll, allowScroll] = useScrollBlock();
 
-  function handleBackdropClick({ currentTarget, target }) {
-    if (currentTarget.nodeName === target.nodeName) {
-      closeModal();
-    }
-  }
-
   useEffect(() => {
     blockScroll();
 
-    function handleEscapeDown({ code }) {
-      if (code === 'Escape') {
-        closeModal();
-      }
-    }
-
-    window.addEventListener('keydown', handleEscapeDown);
-
     return () => {
       allowScroll();
-      window.removeEventListener('keydown', handleEscapeDown);
     };
-  }, [blockScroll, allowScroll, closeModal]);
+  }, [blockScroll, allowScroll]);
 
   return createPortal(
-    <BackDrop onClick={handleBackdropClick}>
+    <BackDrop>
       <StyledModal>
         <CloseBtn
           type="button"

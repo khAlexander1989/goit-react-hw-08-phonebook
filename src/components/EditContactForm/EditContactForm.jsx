@@ -9,7 +9,7 @@ import { FormInput } from 'components/FormInput';
 import { StyledForm, SaveChangesBtn } from './EditContactForm.styled';
 
 import { updateContact } from 'redux/contacts/operations';
-import { selectUpdatingStatus } from 'redux/contacts/selectors';
+import { selectUpdatingStatus, selectContacts } from 'redux/contacts/selectors';
 import { STATUS } from 'utils/constants';
 import { Notify } from 'notiflix';
 import { Box } from 'components/Box';
@@ -20,8 +20,20 @@ export default function EditContactForm({
 }) {
   const dispatch = useDispatch();
   const updatingStatus = useSelector(selectUpdatingStatus);
+  const contacts = useSelector(selectContacts);
+
+  function isExistContact(contactName, contacts) {
+    return contacts.some(
+      ({ name }) => name.toUpperCase() === contactName.toUpperCase()
+    );
+  }
 
   async function handleFormSubmit(values) {
+    if (isExistContact(values.name, contacts)) {
+      Notify.warning(`${values.name} is already in contacts`);
+      return;
+    }
+
     dispatch(updateContact({ id, ...values }))
       .unwrap()
       .then(() => Notify.success('Contact has updated.'))
